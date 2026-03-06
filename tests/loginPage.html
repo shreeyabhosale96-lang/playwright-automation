@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Pizza Palace — Home</title>
+	<style>
+		:root{--accent:#e94e3a;--dark:#0f1724;--muted:#6b7280}
+		*{box-sizing:border-box}
+		body{margin:0;font-family:Inter, system-ui, -apple-system, Arial, sans-serif;background:linear-gradient(180deg,#fffaf6,#fff7ef);color:var(--dark)}
+		header{display:flex;align-items:center;justify-content:space-between;padding:20px 40px}
+		.logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:20px}
+		.logo .mark{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#ffb56b,#ff6b6b);display:flex;align-items:center;justify-content:center;color:white;font-weight:800}
+		nav a{margin-left:18px;color:var(--dark);text-decoration:none;font-weight:600}
+		.container{max-width:1100px;margin:30px auto;padding:20px}
+		.hero{display:flex;gap:36px;align-items:center;background:rgba(255,255,255,0.6);backdrop-filter:blur(6px);padding:28px;border-radius:16px;box-shadow:0 12px 30px rgba(15,23,42,0.08)}
+		.hero-left{flex:1}
+		h1{font-size:40px;margin:0 0 12px;line-height:1.05}
+		p.lead{color:var(--muted);margin:0 0 18px;font-size:16px}
+		.cta{display:flex;gap:12px}
+		.btn{background:var(--accent);color:#fff;padding:12px 18px;border-radius:10px;border:0;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(233,78,58,0.18);transition:transform .14s ease}
+		.btn:hover{transform:translateY(-3px)}
+		.ghost{background:transparent;border:2px solid rgba(15,23,42,0.06);padding:10px 16px;border-radius:10px;cursor:pointer}
+		.hero-right{width:480px;flex-shrink:0}
+		.pizza-card{border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(10,20,30,0.08)}
+		.pizza-card img{width:100%;height:340px;object-fit:cover;display:block}
+		.features{display:flex;gap:18px;margin-top:18px}
+		.feature{background:#fff;padding:12px;border-radius:10px;flex:1;text-align:center}
+		.feature h3{margin:0;font-size:16px}
+		footer{margin-top:24px;text-align:center;color:var(--muted);font-size:14px}
+
+		/* Order modal */
+		.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);visibility:hidden;opacity:0;transition:opacity .18s ease,visibility .18s}
+		.modal.open{visibility:visible;opacity:1}
+		.modal-card{background:#fff;padding:20px;border-radius:12px;width:420px;box-shadow:0 20px 60px rgba(10,20,30,0.2)}
+		.form-row{margin-bottom:10px}
+		input,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef7}
+		.actions{display:flex;gap:10px;margin-top:12px}
+
+		@media(max-width:900px){.hero{flex-direction:column}.hero-right{width:100%}.pizza-card img{height:260px}}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="logo"><div class="mark">P</div>Pizza Palace</div>
+		<nav>
+			<a href="#menu">Menu</a>
+			<a href="#about">About</a>
+			<a href="#contact">Contact</a>
+		</nav>
+	</header>
+
+	<main class="container">
+		<section class="hero">
+			<div class="hero-left">
+				<h1>Fresh. Hot. Hand-tossed — Delivered Fast.</h1>
+				<p class="lead">Crafted with the finest ingredients and baked to golden perfection. Build your pizza, choose your crust, and we'll bring it piping hot.</p>
+				<div class="cta">
+					<button class="btn" id="openOrder">Order Now</button>
+					<button class="ghost" id="seeMenu">See Menu</button>
+				</div>
+
+				<div class="features">
+					<div class="feature"><h3>30–40 min</h3><div style="color:var(--muted)">Delivery</div></div>
+					<div class="feature"><h3>100% Fresh</h3><div style="color:var(--muted)">Local ingredients</div></div>
+					<div class="feature"><h3>Custom</h3><div style="color:var(--muted)">Build your pizza</div></div>
+				</div>
+			</div>
+
+			<div class="hero-right">
+				<div class="pizza-card">
+					<img src="https://images.unsplash.com/photo-1601924582971-3c2a7b2e7a6d?auto=format&fit=crop&w=1200&q=80" alt="Large pizza with toppings" />
+				</div>
+			</div>
+		</section>
+
+		<footer>
+			&copy; Pizza Palace — Made with ❤️. Demo page for Playwright tests.
+		</footer>
+	</main>
+
+	<!-- Order modal -->
+	<div id="orderModal" class="modal" role="dialog" aria-hidden="true">
+		<div class="modal-card" role="document">
+			<h2 style="margin-top:0">Place your order</h2>
+			<div class="form-row">
+				<label>Name</label>
+				<input id="custName" placeholder="Your name" />
+			</div>
+			<div class="form-row">
+				<label>Address</label>
+				<input id="addr" placeholder="Delivery address" />
+			</div>
+			<div class="form-row">
+				<label>Size</label>
+				<select id="size"><option>Small</option><option>Medium</option><option>Large</option></select>
+			</div>
+			<div class="form-row">
+				<label>Toppings</label>
+				<input id="toppings" placeholder="e.g. pepperoni, mushrooms" />
+			</div>
+			<div class="actions">
+				<button class="btn" id="placeOrder">Place Order</button>
+				<button class="ghost" id="cancelOrder">Cancel</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const openOrder = document.getElementById('openOrder');
+		const orderModal = document.getElementById('orderModal');
+		const cancel = document.getElementById('cancelOrder');
+		const place = document.getElementById('placeOrder');
+
+		openOrder.addEventListener('click', ()=>{ orderModal.classList.add('open'); orderModal.setAttribute('aria-hidden','false'); });
+		cancel.addEventListener('click', ()=>{ orderModal.classList.remove('open'); orderModal.setAttribute('aria-hidden','true'); });
+		place.addEventListener('click', ()=>{
+			const name = document.getElementById('custName').value.trim();
+			const addr = document.getElementById('addr').value.trim();
+			if(!name || !addr){ alert('Please enter name and address'); return; }
+			orderModal.classList.remove('open'); orderModal.setAttribute('aria-hidden','true');
+			alert('Thanks ' + name + '! Your ' + document.getElementById('size').value + ' pizza is on the way.');
+		});
+
+		// keyboard escape to close
+		window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') { orderModal.classList.remove('open'); orderModal.setAttribute('aria-hidden','true'); } });
+	</script>
+</body>
+</html>
+
